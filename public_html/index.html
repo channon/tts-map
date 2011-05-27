@@ -102,10 +102,36 @@
 
 
 <script type="text/javascript">
+
+function load(e) {
+  var cluster = e.tile.cluster || (e.tile.cluster = kmeans()
+      .iterations(2)
+      .size(200));
+
+  for (var i = 0; i < e.features.length; i++) {
+    cluster.add(e.features[i].data.geometry.coordinates);
+  }
+
+  var tile = e.tile, g = tile.element;
+  while (g.lastChild) g.removeChild(g.lastChild);
+
+  var means = cluster.means();
+  means.sort(function(a, b) { return b.size - a.size; });
+  for (var i = 0; i < means.length; i++) {
+    var mean = means[i], point = g.appendChild(po.svg("circle"));
+    point.setAttribute("cx", mean.x);
+    point.setAttribute("cy", mean.y);
+    point.setAttribute("r", Math.pow(2, tile.zoom - 11) * Math.sqrt(mean.size));
+  }
+}
+
+
 var po = org.polymaps;
 
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .center({lat: 43.45, lon: 6.15})
+    .zoom(4)
     .add(po.interact())
     .add(po.hash());
 
@@ -115,8 +141,32 @@ map.add(po.image()
     + "/999/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
+//map.add(po.geoJson()
+//    .url('/')
+//    .on("load", load)
+//    .clip(false)
+//    .zoom(14));
+
 map.add(po.compass()
     .pan("none"));
+
+
+var testp = function() {
+data = {"type": "FeatureCollection",
+  	"features": [
+        {"id":"177639",
+	 "type":"Feature",
+	 "geometry":{
+		"type":"Point",
+		"coordinates":[-3.51,40.31]
+	}}]
+}
+map.add(po.geoJson()
+	.features(data)
+	.on("load", load)
+	.clip(false)
+	.zoom(14))
+}
 
 </script>
 </body>
