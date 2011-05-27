@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+  <script src='js/json2.js'></script>
+  <script type="text/javascript" src="http://cdn.simplegeo.com/js/1.3/simplegeo.places.min.js">
+  </script>
+  <script>
+  $(document).ready(function(){
+    if(!("WebSocket" in window)) {
+      alert("Sorry, the build of your browser does not support WebSockets. Please use latest Chrome or Webkit nightly");
+      return;
+    }
+
+    
+    ws = new WebSocket("ws://localhost:8080/");
+    window.datadebug = [];
+    window.buffer = "";
+    window.geodebug = [];
+    window.geocount = {'geo':0, 'nogeo':0};
+
+    var gettweet = function(tw) {
+      var p = $("<div class='tweet' style='display:none'><div class='content'><a class='main-screenname' href='http://www.twitter.com/" + tw.user.screen_name + "/status/" + tw.id + "' target='_blank'>" + tw.user.screen_name + "</a> " + tw.text + "</div></div>");
+      u = tw.user;
+      if (tw.user.geo_enabled) {
+      //if (tw.geo) {		      
+		      window.geocount.geo += 1
+		      console.debug('one more geo...')
+		      geodebug.push(tw);
+		      } else {
+		      window.geocount.nogeo += 1
+	      }
+      checkscroll(p);
+      window.datadebug.push(tw);
+      //checkscroll();
+    };
+
+    var checkscroll = function(p) {
+      if($('#tweets div.tweet').size() > 15) {
+        $('#tweets div.tweet:last').slideDown(100, function() {
+          $(this).remove();
+        });
+      }
+      $('#tweets').prepend(p);
+      p.slideDown(140);
+    }
+
+    ws.onmessage = function(evt) { 
+      lc = evt.data.substr(evt.data.length - 3)
+      if (lc === "}\r\n") {
+        //console.debug('new tweet!');
+	try {
+	  chunk = window.buffer + evt.data;
+	  tw = JSON.parse(chunk);
+	} catch(e) {
+	  //console.debug('PROBLEM PARSING !!!' + chunk);
+	  //console.debug('some problem parsing... :(');
+	  //XXX fixme this shit
+	}
+	gettweet(tw);
+	window.buffer = "";
+      } else {
+	window.buffer = window.buffer + evt.data;
+      }
+    };
+    ws.onclose = function() {
+      alert("socket closed");
+    };
+    ws.onopen = function() {
+	console.debug('socket opened...');
+    };
+  });
+  </script>
+</head>
+<body>
+  <div id="tweets" style="width:50%;float:right;">
+  </div>
+  <div id "map" style="width:50%;float:left;">
+	  <h1>Toma la plaza!</h1>
+  </div>
+</body>
+</html>
