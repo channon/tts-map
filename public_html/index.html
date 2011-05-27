@@ -5,6 +5,27 @@
   <script src='js/json2.js'></script>
   <script type="text/javascript" src="http://cdn.simplegeo.com/js/1.3/simplegeo.places.min.js">
   </script>
+  <script src="http://polymaps.org/modernizr.min.js?1.5"></script>
+  <script src="http://polymaps.org/polymaps.min.js?2.5.0"></script>
+  <script src="http://polymaps.org/nns.min.js?1.1.0"></script>
+  <style type="text/css">
+  @import url("css/screen.css");
+  @import url("css/style.css");
+   
+  div#map {
+    background: #021019;
+    }
+     
+    .compass .back {
+      fill: #256574;
+    }
+       
+    .compass .fore, .compass .chevron {
+      stroke: #1AA398;
+    }
+	 
+  </style> 
+
   <script>
   $(document).ready(function(){
     if(!("WebSocket" in window)) {
@@ -73,10 +94,30 @@
   </script>
 </head>
 <body>
-  <div id="tweets" style="width:50%;float:right;">
+  <div id="tweets" style="width:45%;float:right;">
   </div>
-  <div id "map" style="width:50%;float:left;">
-	  <h1>Toma la plaza!</h1>
+  <div id="map" style="width:50%;float:left;">
+	  <!--<h1>Toma la plaza!</h1>-->
   </div>
+
+
+<script type="text/javascript">
+var po = org.polymaps;
+
+var map = po.map()
+    .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .add(po.interact())
+    .add(po.hash());
+
+map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com"
+    + "/20d51d736e5d4b5db64cd22d11e81194" //FIXME add your api key
+    + "/999/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""])));
+
+map.add(po.compass()
+    .pan("none"));
+
+</script>
 </body>
 </html>
