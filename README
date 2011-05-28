@@ -1,0 +1,22 @@
+twit-o-matic
+
+1. install nodejs
+2. nodejs server.js yourtwittuser yourpass "tag1,tag2,tag3"
+3. serve public_html on your http server
+4. enjoy ** as long as your browser supports websockets
+
+
+TODO:
+
+phase 1
+
+- find a fucking sensible geocoding service (cloudmade, maybe?)
+- add geocoded twits to map (addpoint fun is done)
+- filter by tags / lang
+- regexp for links. link parsing + video/pic gallery with most twitted.
+
+phase 2
+
+- process twit stream on nodejs, pass structure to browser via wsocket
+- hook redis on backend. store data
+- process links.

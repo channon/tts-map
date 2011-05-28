@@ -41,22 +41,26 @@
     window.datadebug = [];
     window.buffer = "";
     window.geodebug = [];
+    window.coordebug = [];
     window.geocount = {'geo':0, 'nogeo':0};
 
     var gettweet = function(tw) {
       var p = $("<div class='tweet' style='display:none'><div class='content'><a class='main-screenname' href='http://www.twitter.com/" + tw.user.screen_name + "/status/" + tw.id + "' target='_blank'>" + tw.user.screen_name + "</a> " + tw.text + "</div></div>");
       u = tw.user;
       if (tw.user.geo_enabled) {
-      //if (tw.geo) {		      
 		      window.geocount.geo += 1
 		      console.debug('one more geo...')
 		      geodebug.push(tw);
-		      } else {
+		      } else { 
+		              if (tw.geo) {
+			      window.geocount.geo += 1
+			      console.debug('one more coord!')
+			      coordebug.push(tw);
+			      } else {
 		      window.geocount.nogeo += 1
-	      }
+      }}
       checkscroll(p);
       window.datadebug.push(tw);
-      //checkscroll();
     };
 
     var checkscroll = function(p) {
