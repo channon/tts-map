@@ -23,6 +23,9 @@
     .compass .fore, .compass .chevron {
       stroke: #1AA398;
     }
+    #rev {
+    fill:purple
+    }
 	 
   </style> 
 
@@ -94,36 +97,42 @@
   </script>
 </head>
 <body>
+  <img src="http://a0.twimg.com/profile_images/1365145298/logo_normal.png"/>
+  <b>we're #takingthesquares!</b>
   <div id="tweets" style="width:45%;float:right;">
   </div>
   <div id="map" style="width:50%;float:left;">
 	  <!--<h1>Toma la plaza!</h1>-->
+	  <!--here we go...!-->
+
   </div>
 
 
 <script type="text/javascript">
 
-function load(e) {
-  var cluster = e.tile.cluster || (e.tile.cluster = kmeans()
-      .iterations(2)
-      .size(200));
+//XXX k-means can work nice only when a shitload of points...
+//let's add simple points by the moment...
+//function load(e) {
+//  var cluster = e.tile.cluster || (e.tile.cluster = kmeans()
+//      .iterations(2)
+//      .size(200));
 
-  for (var i = 0; i < e.features.length; i++) {
-    cluster.add(e.features[i].data.geometry.coordinates);
-  }
+//  for (var i = 0; i < e.features.length; i++) {
+//    cluster.add(e.features[i].data.geometry.coordinates);
+//  }
 
-  var tile = e.tile, g = tile.element;
-  while (g.lastChild) g.removeChild(g.lastChild);
+//  var tile = e.tile, g = tile.element;
+//  while (g.lastChild) g.removeChild(g.lastChild);
 
-  var means = cluster.means();
-  means.sort(function(a, b) { return b.size - a.size; });
-  for (var i = 0; i < means.length; i++) {
-    var mean = means[i], point = g.appendChild(po.svg("circle"));
-    point.setAttribute("cx", mean.x);
-    point.setAttribute("cy", mean.y);
-    point.setAttribute("r", Math.pow(2, tile.zoom - 11) * Math.sqrt(mean.size));
-  }
-}
+//  var means = cluster.means();
+//  means.sort(function(a, b) { return b.size - a.size; });
+//  for (var i = 0; i < means.length; i++) {
+//    var mean = means[i], point = g.appendChild(po.svg("circle"));
+//    point.setAttribute("cx", mean.x);
+//    point.setAttribute("cy", mean.y);
+//    point.setAttribute("r", Math.pow(2, tile.zoom - 11) * Math.sqrt(mean.size));
+//  }
+//}
 
 
 var po = org.polymaps;
@@ -141,31 +150,20 @@ map.add(po.image()
     + "/999/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-//map.add(po.geoJson()
-//    .url('/')
-//    .on("load", load)
-//    .clip(false)
-//    .zoom(14));
 
 map.add(po.compass()
     .pan("none"));
 
-
-var testp = function() {
-data = {"type": "FeatureCollection",
-  	"features": [
-        {"id":"177639",
-	 "type":"Feature",
-	 "geometry":{
-		"type":"Point",
-		"coordinates":[-3.51,40.31]
-	}}]
-}
-map.add(po.geoJson()
-	.features(data)
-	.on("load", load)
-	.clip(false)
-	.zoom(14))
+function addpoint(lon,lat) {
+  _d = [{"id":"xxx",
+      "type": "Feature",
+      "geometry":{
+	      "type":"Point",
+	      "coordinates":[lon,lat]
+      }}]
+  map.add(po.geoJson()
+	.features(_d).id('rev')
+  )
 }
 
 </script>
