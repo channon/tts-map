@@ -1,3 +1,5 @@
+//twitter-nodejs-websocket
+
 var sys    = require('sys'),
     http   = require('http'),
     ws     = require("./vendor/ws"),
@@ -7,7 +9,7 @@ var sys    = require('sys'),
 // Command line args
 var USERNAME = process.ARGV[2];
 var PASSWORD = process.ARGV[3];
-var KEYWORD  = process.ARGV[4] || "iphone";
+var KEYWORD  = process.ARGV[4] || "europeanrevolution";
 
 if (!USERNAME || !PASSWORD)
   return sys.puts("Usage: node server.js <twitter_username> <twitter_password> <keyword>");
