@@ -8,6 +8,8 @@
   <script src="http://polymaps.org/modernizr.min.js?1.5"></script>
   <script src="http://polymaps.org/polymaps.min.js?2.5.0"></script>
   <script src="http://polymaps.org/nns.min.js?1.1.0"></script>
+  <script src="http://tile.cloudmade.com/wml/0.4/web-maps-lite.js" type="text/javascript"></script>
+
   <style type="text/css">
   @import url("css/screen.css");
   @import url("css/style.css");
@@ -24,7 +26,8 @@
       stroke: #1AA398;
     }
     #rev {
-    fill:purple
+    /*fill:purple*/
+    fill:white
     }
 	 
   </style> 
@@ -50,6 +53,9 @@
       if (tw.user.geo_enabled) {
 		      window.geocount.geo += 1
 		      console.debug('one more geo...')
+		      //XXX 
+		      geocode(tw.user.location);
+
 		      geodebug.push(tw);
 		      } else { 
 		              if (tw.geo) {
@@ -138,6 +144,9 @@
 //  }
 //}
 
+var CLOUDMADE_API = '6d655a2758654760abf72fb282f2a11d';
+gc = new CM.Geocoder(CLOUDMADE_API);
+
 
 var po = org.polymaps;
 
@@ -150,13 +159,27 @@ var map = po.map()
 
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
-    + "/20d51d736e5d4b5db64cd22d11e81194" //FIXME add your api key
+    //+ "/20d51d736e5d4b5db64cd22d11e81194" //FIXME add your api key
+    + "/" + CLOUDMADE_API
     + "/999/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
 
 map.add(po.compass()
     .pan("none"));
+
+function geocode(qstring) {
+  //XXX check we don't already have this location (hash) !!!
+  gc.getLocations(qstring, 
+		  function(response){
+		  if(response.bounds) {
+		  	lat = response.bounds[0][0]; 
+		  	lon = response.bounds[0][1];
+		  	addpoint(lon,lat);
+			}
+		  }, 
+		  {resultsNumber:1})
+}
 
 function addpoint(lon,lat) {
   _d = [{"id":"xxx",
