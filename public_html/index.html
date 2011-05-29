@@ -48,7 +48,12 @@
     window.geocount = {'geo':0, 'nogeo':0};
 
     var gettweet = function(tw) {
-      var p = $("<div class='tweet' style='display:none'><div class='content'><a class='main-screenname' href='http://www.twitter.com/" + tw.user.screen_name + "/status/" + tw.id + "' target='_blank'>" + tw.user.screen_name + "</a> " + tw.text + "</div></div>");
+
+      var regexp = /((http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
+      var hashreg = /(#\S+)/gi;
+      var text = tw.text.replace(regexp,"<a href='$1' target='_blank'>$1</a>").
+    	replace(hashreg,'<b>$1</b>');
+      var p = $("<div class='tweet' style='display:none'><div class='content'><a class='main-screenname' href='http://www.twitter.com/" + tw.user.screen_name + "/status/" + tw.id + "' target='_blank'>" + tw.user.screen_name + "</a> " + text + "</div></div>");
       u = tw.user;
       if (tw.user.geo_enabled) {
 		      window.geocount.geo += 1

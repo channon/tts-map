@@ -27,11 +27,20 @@ var clients = [];
 var twitter = http.createClient(80, "stream.twitter.com");
 var request = twitter.request("GET", "/1/statuses/filter.json?track=" + KEYWORD, headers);
 
+// regexp for links
+var linkregexp = /((http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi; 
+
 request.addListener('response', function (response) {
   response.setEncoding("utf8");
   
   response.addListener("data", function (chunk) {
     // Send response to all connected clients
+    //l = linkregexp.exec(chunk);
+    //t = JSON.parse(chunk);
+    //sys.debug(t.text);
+    //if(l){
+    //  	sys.debug('link:' + l[0]);
+    //}
     
     clients.each(function(c) {
       c.write(chunk);
