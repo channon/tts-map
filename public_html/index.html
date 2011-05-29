@@ -35,7 +35,7 @@
   <script>
   $(document).ready(function(){
     if(!("WebSocket" in window)) {
-      alert("Sorry, the build of your browser does not support WebSockets. Please use latest Chrome or Webkit nightly");
+      alert("Are you from the past?\nSorry to inform you that you're doing the revolution with a very old browser. Please update to latest firefox / chromium / chrome / safari, No, IE is not revolutionary at all.");
       return;
     }
 
@@ -98,7 +98,7 @@
       }
     };
     ws.onclose = function() {
-      alert("socket closed");
+      alert("reloading the #european revolution... please be patient and refresh in a while... (maybe time to stop twitting and go out to the streets?");
     };
     ws.onopen = function() {
 	console.debug('socket opened...');
